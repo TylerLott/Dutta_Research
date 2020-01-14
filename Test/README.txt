@@ -6,7 +6,7 @@ DATA SPLIT:
 %10 of total dataset
 
 ORGANIZATION:
-First level files contain images training data of different sizes (small, medium, large)
+First level files contain test data images of different sizes (small, medium, large)
 
 Each file contained inside the first level files contains 4 data points
 1 BSE image
