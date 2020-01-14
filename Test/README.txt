@@ -6,7 +6,9 @@ DATA SPLIT:
 %10 of total dataset
 
 ORGANIZATION:
-Each file contained inside contains 4 data points
+First level files contain images training data of different sizes (small, medium, large)
+
+Each file contained inside the first level files contains 4 data points
 1 BSE image
 1 EBSD image
 1 OM image
