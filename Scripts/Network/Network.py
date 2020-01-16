@@ -81,6 +81,12 @@ for dense_nodes in DENSE_NODES:
         # MODEL
         model = Model(inputs=[one.input, two.input, three.input], outputs=end)
 
+        # COMPILE MODEL
+        model.compile(loss='loss', optimizer='adam', metrics=['accuracy'])
+
+        # FIT MODEL
+        model.fit(validation_split=0.2)
+
 
 
 
