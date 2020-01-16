@@ -6,6 +6,6 @@ restricts the amount of data found in this repo. Research conducted under Dr. So
 ### Scripts
 Contains two types of python scripts used in this project.
 ##### Data Cleaning
-These scripts allow the original data to be split, allowing for more training data to be used in the model.
+These scripts allow the original data to be split, creating a more robust dataset that is able to be trained in the model
 ##### Network
 This contains the Neural Network that is to be trained on the train data.
