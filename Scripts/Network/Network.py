@@ -17,56 +17,69 @@ CONV_NODES = [64, 128, 256, 512]
 DENSE_NODES = [32, 64, 128]
 
 # TRAIN DATA IMPORT
-BSE =
-EBSD =
-OM =
+BSE = 'path'
+EBSD = 'path'
+OM = 'path'
 
-# INPUTS
-input_1 = Input(shape=BSE_SHAPE)
-input_2 = Input(shape=EBSD_SHAPE)
-input_3 = Input(shape=OM_SHAPE)
+# NESTED FOR LOOPS
+# This is to allow the variables to test different node variations
+for dense_nodes in DENSE_NODES:
+    for conv_nodes in CONV_NODES:
 
-# FIRST BRANCH
-one = Conv2D(CONV_NODES[1], (3, 3), activation='relu', input_shape=BSE.shape[1:])
-one = MaxPool2D(pool_size=(2, 2))(one)
+        # INPUTS
+        input_1 = Input(shape=BSE_SHAPE)
+        input_2 = Input(shape=EBSD_SHAPE)
+        input_3 = Input(shape=OM_SHAPE)
 
-one = Conv2D(CONV_NODES[1] * 2, 3, activation='relu')(one)
-one = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(one)
+        # FIRST BRANCH
+        # BSE
+        # needs to accept a black and white image
+        one = Conv2D(conv_nodes, (3, 3), activation='relu', input_shape=BSE.shape[1:])
+        one = MaxPool2D(pool_size=(2, 2))(one)
 
-one = Conv2D((CONV_NODES[1] / 2), 3, activation='relu')(one)
-one = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(one)
+        one = Conv2D(conv_nodes * 2, 3, activation='relu')(one)
+        one = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(one)
+
+        one = Conv2D((conv_nodes / 2), 3, activation='relu')(one)
+        one = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(one)
 
 
-# SECOND BRANCH
-two = Conv2D(CONV_NODES[1], (3, 3), activation='relu', input_shape=EBSD.shape[1:])
-two = MaxPool2D(pool_size=(2, 2))(two)
+        # SECOND BRANCH
+        # EBSD
+        # needs to accept a RGB image
+        two = Conv2D(conv_nodes, (3, 3), activation='relu', input_shape=EBSD.shape[1:])
+        two = MaxPool2D(pool_size=(2, 2))(two)
 
-two = Conv2D(CONV_NODES[1] * 2, 3, activation='relu')(two)
-two = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(two)
+        two = Conv2D(conv_nodes * 2, 3, activation='relu')(two)
+        two = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(two)
 
-two = Conv2D((CONV_NODES[1] / 2), 3, activation='relu')(two)
-two = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(two)
+        two = Conv2D((conv_nodes / 2), 3, activation='relu')(two)
+        two = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(two)
 
-# THIRD BRANCH
-three = Conv2D(CONV_NODES[1], (3, 3), activation='relu', input_shape=OM.shape[1:])
-three = MaxPool2D(pool_size=(2, 2))(three)
+        # THIRD BRANCH
+        # OM
+        # needs to accept a black and white image
+        three = Conv2D(conv_nodes, (3, 3), activation='relu', input_shape=OM.shape[1:])
+        three = MaxPool2D(pool_size=(2, 2))(three)
 
-three = Conv2D(CONV_NODES[1] * 2, 3, activation='relu')(three)
-three = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(three)
+        three = Conv2D(conv_nodes * 2, 3, activation='relu')(three)
+        three = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(three)
 
-three = Conv2D((CONV_NODES[1] / 2), 3, activation='relu')(three)
-three = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(three)
+        three = Conv2D((conv_nodes / 2), 3, activation='relu')(three)
+        three = MaxPool2D(pool_size=(2, 2), strides=2, padding='valid')(three)
 
-# COMBINE THE BRANCHES
-combined = concatenate(one.output, two.output, three.output)
+        # COMBINE THE BRANCHES
+        # concatenates the three branches all together into one
+        combined = concatenate(one.output, two.output)
+        combined = concatenate(combined, three.output)
 
-# END BRANCH
-end = Dense(DENSE_NODES[0], activation='relu')(combined)
-end = Dense(DENSE_NODES[0] / 2, activation='relu')(end)
-end = Dense(1, activation='sigmoid')(end)
+        # END BRANCH
+        end = Dense(dense_nodes, activation='relu')(combined)
+        end = Dense(dense_nodes / 2, activation='relu')(end)
+        end = Dense(1, activation='sigmoid')(end)
 
-# MODEL
-model = Model(inputs=[one.input, two.input, three.input], outputs=end)
+        # MODEL
+        model = Model(inputs=[one.input, two.input, three.input], outputs=end)
 
 
 
